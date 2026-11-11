@@ -97,7 +97,30 @@ export function buildersDesde(catalogo) {
       { id: 'extras', titulo: 'Extras', tipo: 'multi', opciones: delCatalogo(ing, 'extra') }
     ]
   }
-  return { pizza, hamburguesa: HAMBURGUESA, pollo: POLLO }
+  return aplicarBD({ pizza, hamburguesa: HAMBURGUESA, pollo: POLLO }, catalogo)
+}
+
+/** La BD manda en precio y disponibilidad (filas de `opciones`) y en la base (`constructores`). */
+function aplicarBD(builders, catalogo) {
+  const filas = catalogo.opciones || []
+  const bases = catalogo.constructores || []
+  if (!filas.length && !bases.length) return builders
+  const out = {}
+  for (const [k, b] of Object.entries(builders)) {
+    const base = bases.find((x) => x.id === k)?.base
+    out[k] = {
+      ...b,
+      base: base ?? b.base,
+      pasos: b.pasos.map((p) => ({
+        ...p,
+        opciones: p.opciones.map((o) => {
+          const f = filas.find((r) => r.constructor === k && r.paso === p.id && r.id === o.id)
+          return f ? { ...o, precio: f.precio, disponible: f.disponible } : o
+        })
+      }))
+    }
+  }
+  return out
 }
 
 const MAX_CANTIDAD = 2

@@ -26,12 +26,13 @@ export function guardarPedidoLocal(codigo, telefono) {
 export async function getCatalogo() {
   if (!supabase) return catalogoLocal
   try {
-    const [p, i] = await Promise.all([
+    const [p, o, c] = await Promise.all([
       supabase.from('productos').select('*').order('orden'),
-      supabase.from('ingredientes').select('*').order('orden')
+      supabase.from('opciones').select('*').order('orden'),
+      supabase.from('constructores').select('*')
     ])
-    if (p.error || i.error || !p.data?.length || !i.data?.length) return catalogoLocal
-    return { ...catalogoLocal, productos: p.data, ingredientes: i.data }
+    if (p.error || o.error || !p.data?.length) return catalogoLocal
+    return { ...catalogoLocal, productos: p.data, opciones: o.data || [], constructores: c.data || [] }
   } catch {
     return catalogoLocal
   }

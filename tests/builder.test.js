@@ -56,3 +56,18 @@ test('precioBuilder hamburguesa incluye base y resumen lista lo elegido', () => 
   expect(precioBuilder(b, sel)).toBeGreaterThan(b.base)
   expect(resumenSeleccion(b, sel)).toContain('Tocineta')
 })
+
+test('precios y disponibilidad de la BD (opciones) sobrescriben los locales', () => {
+  const cat = {
+    ...catalogo,
+    opciones: [
+      { constructor: 'pizza', paso: 'vegetales', id: 'rugula', precio: 9999, disponible: false },
+      { constructor: 'hamburguesa', paso: 'pan', id: 'integral', precio: 2222, disponible: true }
+    ]
+  }
+  const b = buildersDesde(cat)
+  const rugula = b.pizza.pasos.find((p) => p.id === 'vegetales').opciones.find((o) => o.id === 'rugula')
+  expect(rugula).toMatchObject({ precio: 9999, disponible: false })
+  const integral = b.hamburguesa.pasos.find((p) => p.id === 'pan').opciones.find((o) => o.id === 'integral')
+  expect(integral.precio).toBe(2222)
+})
