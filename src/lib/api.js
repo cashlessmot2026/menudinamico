@@ -70,3 +70,14 @@ export function suscribirPedido(telefono, codigo, cb, intervaloMs = 8000) {
     clearInterval(id)
   }
 }
+
+// ---------------------------------------------------------------- admin
+/** Devuelve el token, o null si la clave es incorrecta. Lanza Error('bloqueado') tras 5 fallos. */
+export const adminLogin = (clave) => rpc('admin_login', { p_clave: clave })
+export const adminListar = (token, estado = null) => rpc('admin_listar_pedidos', { p_token: token, p_estado: estado })
+export const adminCambiarEstado = (token, id, estado, motivo = null) =>
+  rpc('admin_cambiar_estado', { p_token: token, p_id: id, p_estado: estado, p_motivo: motivo })
+export const adminResumen = (token) => rpc('admin_resumen', { p_token: token })
+export const adminGuardarProducto = (token, datos) => rpc('admin_guardar_producto', { p_token: token, datos })
+export const adminGuardarOpcion = (token, datos) => rpc('admin_guardar_opcion', { p_token: token, datos })
+export const adminCambiarClave = (token, nueva) => rpc('admin_cambiar_clave', { p_token: token, p_nueva: nueva })

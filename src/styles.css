@@ -125,3 +125,15 @@ main { padding: 0 16px 80px; max-width: 1100px; margin: 0 auto; }
 .pedido { width: 100%; max-width: 560px; }
 .pedido-items { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .pedido-items li { display: flex; justify-content: space-between; gap: 10px; }
+
+.admin { align-items: stretch; }
+.admin-head { display: flex; justify-content: space-between; align-items: center; }
+.ped header { display: flex; justify-content: space-between; align-items: center; }
+.ped p { margin: 4px 0; }
+.estado-recibido { background: #3b82f6; } .estado-preparando { background: #f59e0b; color: #1a1205; }
+.estado-en_camino { background: #8b5cf6; } .estado-entregado { background: var(--ok); color: #06210f; } .estado-cancelado { background: var(--danger); }
+.field select, .field textarea { border-radius: 16px; border: 2px solid rgba(255,255,255,.1); background: var(--bg); color: var(--text); padding: 12px 14px; font: 600 1rem 'Nunito'; }
+.cat-row { display: grid; grid-template-columns: 1fr 110px auto auto auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+.cat-row input[type=number] { border-radius: 12px; border: 2px solid rgba(255,255,255,.1); background: var(--bg); color: var(--text); padding: 8px; font: 700 .95rem 'Nunito'; width: 100%; }
+.check { display: flex; gap: 6px; align-items: center; font-size: .85rem; }
+@media (max-width: 700px) { .cat-row { grid-template-columns: 1fr 1fr; } }
