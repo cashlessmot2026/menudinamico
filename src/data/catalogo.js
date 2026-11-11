@@ -1,3 +1,4 @@
+const BASE = import.meta.env?.BASE_URL ?? '/'
 const ing = (id, grupo, nombre, precio, imagen) => ({ id, grupo, nombre, precio, disponible: true, ...(imagen ? { imagen } : {}) })
 
 export const tamanos = [
@@ -38,16 +39,16 @@ export const ingredientes = [
   ing('pollo', 'carne', 'Pollo desmechado', 4000),
   ing('carne-molida', 'carne', 'Carne molida', 4000),
   ing('chorizo', 'carne', 'Chorizo', 4000),
-  ing('rugula', 'vegetal', 'Rúgula', 2500, '/img/rugula.jpg'),
+  ing('rugula', 'vegetal', 'Rúgula', 2500, `${BASE}img/rugula.jpg`),
   ing('lechuga', 'vegetal', 'Lechuga fresca', 1500),
-  ing('aceituna-verde', 'vegetal', 'Aceitunas verdes', 2000, '/img/aceituna-verde.jpeg'),
+  ing('aceituna-verde', 'vegetal', 'Aceitunas verdes', 2000, `${BASE}img/aceituna-verde.jpeg`),
   ing('aceituna-morada', 'vegetal', 'Aceitunas moradas (kalamata)', 2500),
   ing('cebolla-blanca', 'vegetal', 'Cebolla blanca', 1500),
   ing('cebolla-morada', 'vegetal', 'Cebolla morada', 1500),
   ing('cebolla-caramelizada', 'vegetal', 'Cebolla caramelizada', 2500),
   ing('champinones', 'vegetal', 'Champiñones', 2500),
   ing('pimenton', 'vegetal', 'Pimentón', 1500),
-  ing('tomate-cherry', 'vegetal', 'Tomate cherry', 2000, '/img/tomate.jpeg'),
+  ing('tomate-cherry', 'vegetal', 'Tomate cherry', 2000, `${BASE}img/tomate.jpeg`),
   ing('maiz', 'vegetal', 'Maíz tierno', 1500),
   ing('espinaca', 'vegetal', 'Espinaca', 2000),
   ing('alcachofa', 'vegetal', 'Alcachofa', 3000),
