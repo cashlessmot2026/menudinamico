@@ -1,0 +1,27 @@
+:root {
+  --brand: #ff5a1f;
+  --brand-2: #ffb703;
+  --bg: #1a0f0a;
+  --bg-2: #2a1a12;
+  --text: #fff6ee;
+  --muted: #c9b5a6;
+  --ok: #3ddc97;
+  --danger: #ff4d6d;
+  --radius: 28px;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Nunito', system-ui, sans-serif; overflow-x: hidden; }
+h1, h2, h3, .logo { font-family: 'Baloo 2', 'Nunito', sans-serif; margin: 0; }
+a { color: inherit; text-decoration: none; }
+.layout { min-height: 100vh; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; position: sticky; top: 0; z-index: 20; background: rgba(26, 15, 10, 0.85); backdrop-filter: blur(10px); }
+.logo { font-size: 1.6rem; color: var(--brand); }
+main { padding: 0 16px 80px; max-width: 1100px; margin: 0 auto; }
+.card { background: linear-gradient(160deg, var(--bg-2), #1f130d); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; border: 1px solid rgba(255, 255, 255, 0.06); }
+.btn { border: 0; border-radius: 999px; padding: 12px 22px; font: 800 1rem 'Nunito', sans-serif; cursor: pointer; background: var(--bg-2); color: var(--text); transition: transform 0.15s, box-shadow 0.15s; }
+.btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #1a0f0a; }
+.scene3d { perspective: 900px; transform-style: preserve-3d; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
