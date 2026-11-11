@@ -9,7 +9,7 @@ export default function Navbar({ count = 0 }) {
         <NavLink to="/menu/pizzas">Pizzas</NavLink>
         <NavLink to="/menu/hamburguesas">Hamburguesas</NavLink>
         <NavLink to="/menu/asados">Asados</NavLink>
-        <NavLink to="/armar-pizza">Arma tu pizza</NavLink>
+        <NavLink to="/armar/pizza">Arma tu plato</NavLink>
         <NavLink to="/seguimiento">Mi pedido</NavLink>
       </nav>
       <div className="nav-actions">

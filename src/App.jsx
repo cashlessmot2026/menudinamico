@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { CartProvider, useCart } from './store/CartContext.jsx'
 import Navbar from './components/Navbar.jsx'
+import Landing from './pages/Landing.jsx'
+import Menu from './pages/Menu.jsx'
 
 function Layout({ children }) {
   const { cantidad } = useCart()
@@ -17,7 +19,8 @@ export default function App() {
     <CartProvider>
       <Layout>
         <Routes>
-          <Route path="/" element={<h1>Demo</h1>} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/menu/:categoria" element={<Menu />} />
         </Routes>
       </Layout>
     </CartProvider>
