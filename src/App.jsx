@@ -7,6 +7,7 @@ import Constructor from './pages/Constructor.jsx'
 import Carrito from './pages/Carrito.jsx'
 import Checkout from './pages/Checkout.jsx'
 import Pedido from './pages/Pedido.jsx'
+import Seguimiento from './pages/Seguimiento.jsx'
 
 function Layout({ children }) {
   const { cantidad } = useCart()
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pedido/:codigo" element={<Pedido />} />
+          <Route path="/seguimiento" element={<Seguimiento />} />
         </Routes>
       </Layout>
     </CartProvider>
