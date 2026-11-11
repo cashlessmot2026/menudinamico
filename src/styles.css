@@ -25,3 +25,19 @@ main { padding: 0 16px 80px; max-width: 1100px; margin: 0 auto; }
 .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #1a0f0a; }
 .scene3d { perspective: 900px; transform-style: preserve-3d; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+.muted { color: var(--muted); }
+.nav { display: none; gap: 18px; font-weight: 800; }
+.nav a { padding: 6px 12px; border-radius: 999px; }
+.nav a.active { background: var(--bg-2); color: var(--brand-2); }
+@media (min-width: 900px) { .nav { display: flex; } }
+.nav-actions { display: flex; gap: 8px; align-items: center; }
+.cart-btn { padding: 8px 16px; }
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.product-card { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.product-emoji { font-size: 4rem; text-align: center; filter: drop-shadow(0 14px 10px rgba(0,0,0,.5)); }
+.product-foot { display: flex; align-items: center; gap: 10px; margin-top: auto; flex-wrap: wrap; }
+.product-foot .btn { margin-left: auto; }
+.price { color: var(--brand-2); font-size: 1.15rem; }
+.chip { border-radius: 999px; padding: 4px 12px; font-weight: 800; font-size: .8rem; background: var(--bg-2); }
+.chip-off { background: var(--danger); color: #fff; }
