@@ -1,25 +1,27 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PlatoPreview from '../components/PlatoPreview.jsx'
 import { useCatalogo } from '../lib/useCatalogo.js'
 import { useCart } from '../store/CartContext.jsx'
-import { buildersDesde, seleccionInicial, toggleOpcion, precioBuilder, opcionesElegidas, resumenSeleccion } from '../lib/builder.js'
+import { buildersDesde, seleccionInicial, toggleOpcion, incrementarOpcion, precioBuilder, opcionesElegidas, resumenSeleccion } from '../lib/builder.js'
+import { dentroDelCirculo } from '../lib/spread.js'
 import { cop } from '../lib/format.js'
 
-function Chip({ opcion, cantidad, onClick }) {
+function Chip({ opcion, cantidad, onClick, onPointerDown, arrastrable }) {
   const activo = cantidad > 0
   return (
     <motion.button
       type="button"
-      className={`chip-op ${activo ? 'on' : ''}`}
+      className={`chip-op ${activo ? 'on' : ''} ${arrastrable ? 'arrastrable' : ''}`}
+      onPointerDown={onPointerDown}
       aria-pressed={activo}
       disabled={!opcion.disponible}
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
     >
       <span className="chip-circle">
-        {opcion.imagen ? <img src={opcion.imagen} alt="" /> : <span className="chip-emoji">{opcion.emoji}</span>}
+        {opcion.imagen ? <img className="chip-img" src={opcion.imagen} alt="" draggable={false} /> : <span className="chip-emoji">{opcion.emoji}</span>}
         {activo && <span className="chip-badge">{cantidad > 1 ? `×${cantidad}` : '✓'}</span>}
       </span>
       <span className="chip-name">{opcion.nombre}</span>
@@ -35,12 +37,62 @@ function ConstructorInner({ builder }) {
   const [tab, setTab] = useState(pasosTab[0].id)
   const [agregado, setAgregado] = useState(false)
   const total = precioBuilder(builder, sel)
+  const pizzaRef = useRef(null)
+  const arrastrando = useRef(false)
+  const limpiar = useRef(null)
+  const [drag, setDrag] = useState(null) // { opcion, x, y, sobre }
+  const [impacto, setImpacto] = useState(null) // { x, y, id } donde se soltó el ingrediente
+  const esPizza = builder.id === 'pizza'
   const pasoActivo = builder.pasos.find((p) => p.id === tab)
   const segmentado = builder.pasos.find((p) => p.segmentado)
 
   const elegir = (pasoId, opId) => {
     setAgregado(false)
     setSel((s) => toggleOpcion(builder, s, pasoId, opId))
+  }
+
+  useEffect(() => () => limpiar.current?.(), []) // al salir de la página se quitan los listeners
+
+  const sobrePizza = (x, y) => !!pizzaRef.current && dentroDelCirculo(x, y, pizzaRef.current.getBoundingClientRect())
+
+  // Arrastre: la foto del ingrediente se pega al puntero; al soltarla sobre la pizza se reparte por toda ella.
+  const empezarArrastre = (e, pasoId, opcion) => {
+    if (!esPizza || (e.pointerType === 'mouse' && e.button !== 0)) return
+    const inicio = { x: e.clientX, y: e.clientY }
+    let activo = false
+    const mover = (ev) => {
+      if (!activo && Math.hypot(ev.clientX - inicio.x, ev.clientY - inicio.y) > 8) {
+        activo = true
+        arrastrando.current = true
+      }
+      if (activo) setDrag({ opcion, x: ev.clientX, y: ev.clientY, sobre: sobrePizza(ev.clientX, ev.clientY) })
+    }
+    const parar = () => {
+      window.removeEventListener('pointermove', mover)
+      window.removeEventListener('pointerup', soltar)
+      window.removeEventListener('pointercancel', cancelar)
+      limpiar.current = null
+    }
+    const soltar = (ev) => {
+      parar()
+      if (!activo) return
+      setDrag(null)
+      if (sobrePizza(ev.clientX, ev.clientY)) {
+        setAgregado(false)
+        setSel((s) => incrementarOpcion(builder, s, pasoId, opcion.id))
+        setImpacto({ x: ev.clientX, y: ev.clientY, id: Date.now() })
+      }
+      setTimeout(() => { arrastrando.current = false }, 0) // evita que el "click" posterior vuelva a sumar
+    }
+    const cancelar = () => {
+      parar()
+      setDrag(null)
+      setTimeout(() => { arrastrando.current = false }, 0)
+    }
+    window.addEventListener('pointermove', mover)
+    window.addEventListener('pointerup', soltar)
+    window.addEventListener('pointercancel', cancelar)
+    limpiar.current = parar
   }
 
   const agregarAlPedido = () => {
@@ -75,7 +127,7 @@ function ConstructorInner({ builder }) {
         </div>
       )}
 
-      <PlatoPreview builder={builder} sel={sel} />
+      <PlatoPreview builder={builder} sel={sel} pizzaRef={pizzaRef} sobre={!!drag?.sobre} impacto={impacto} />
 
       <div className="tabs" role="tablist">
         {pasosTab.map((p) => {
@@ -91,9 +143,29 @@ function ConstructorInner({ builder }) {
 
       <div className="chips">
         {pasoActivo.opciones.map((o) => (
-          <Chip key={o.id} opcion={o} cantidad={sel[pasoActivo.id]?.[o.id] || 0} onClick={() => elegir(pasoActivo.id, o.id)} />
+          <Chip
+            key={o.id}
+            opcion={o}
+            cantidad={sel[pasoActivo.id]?.[o.id] || 0}
+            arrastrable={esPizza && pasoActivo.tipo === 'multi' && o.disponible}
+            onPointerDown={pasoActivo.tipo === 'multi' && o.disponible ? (e) => empezarArrastre(e, pasoActivo.id, o) : undefined}
+            onClick={() => { if (!arrastrando.current) elegir(pasoActivo.id, o.id) }}
+          />
         ))}
       </div>
+
+      {drag && (
+        <motion.div
+          data-testid="ghost"
+          className="ghost"
+          style={{ left: drag.x, top: drag.y }}
+          initial={{ scale: 0.4, opacity: 0 }}
+          animate={{ scale: drag.sobre ? 1.35 : 1.05, opacity: 1, rotate: drag.sobre ? [0, -8, 8, 0] : 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {drag.opcion.imagen ? <img src={drag.opcion.imagen} alt="" draggable={false} /> : <span>{drag.opcion.emoji}</span>}
+        </motion.div>
+      )}
 
       <div className="cta-bar">
         <div>

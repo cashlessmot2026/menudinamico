@@ -1,4 +1,5 @@
 import { tamanos, masas, salsas, ingredientes } from '../data/catalogo.js'
+import { imagenDe } from '../data/imagenes.js'
 
 const EMOJI = {
   // pizza
@@ -97,7 +98,25 @@ export function buildersDesde(catalogo) {
       { id: 'extras', titulo: 'Extras', tipo: 'multi', opciones: delCatalogo(ing, 'extra') }
     ]
   }
-  return aplicarBD({ pizza, hamburguesa: HAMBURGUESA, pollo: POLLO }, catalogo)
+  return conImagenes(aplicarBD({ pizza, hamburguesa: HAMBURGUESA, pollo: POLLO }, catalogo))
+}
+
+/** Asigna la foto real (si existe) a cada opción; sin foto queda el emoji. */
+function conImagenes(builders) {
+  const out = {}
+  for (const [k, b] of Object.entries(builders)) {
+    out[k] = {
+      ...b,
+      pasos: b.pasos.map((p) => ({
+        ...p,
+        opciones: p.opciones.map(({ imagen: _viejo, ...o }) => {
+          const f = imagenDe(o.id)
+          return f ? { ...o, imagen: f.src, tam: f.tam } : o
+        })
+      }))
+    }
+  }
+  return out
 }
 
 /** La BD manda en precio y disponibilidad (filas de `opciones`) y en la base (`constructores`). */
@@ -151,13 +170,23 @@ export function toggleOpcion(builder, sel, pasoId, opcionId) {
   return { ...sel, [pasoId]: copia }
 }
 
+/** Suma una unidad (máx. 2) sin quitar nunca: es lo que ocurre al soltar un ingrediente sobre la pizza. */
+export function incrementarOpcion(builder, sel, pasoId, opcionId) {
+  const paso = builder.pasos.find((p) => p.id === pasoId)
+  const opcion = paso?.opciones.find((o) => o.id === opcionId)
+  if (!paso || paso.tipo !== 'multi' || !opcion || !opcion.disponible) return sel
+  const actual = sel[pasoId]?.[opcionId] || 0
+  if (actual >= MAX_CANTIDAD) return sel
+  return { ...sel, [pasoId]: { ...sel[pasoId], [opcionId]: actual + 1 } }
+}
+
 /** Lista plana [{paso, id, cantidad, nombre, precio}] de lo elegido. */
 export function opcionesElegidas(builder, sel) {
   const out = []
   for (const paso of builder.pasos) {
     for (const o of paso.opciones) {
       const cantidad = sel[paso.id]?.[o.id] || 0
-      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji })
+      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji, imagen: o.imagen, tam: o.tam })
     }
   }
   return out

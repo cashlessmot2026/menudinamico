@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from '../src/App.jsx'
@@ -45,4 +45,60 @@ test('agregar al pedido crea un item custom en el carrito', async () => {
 test('tipo de constructor inexistente muestra mensaje', async () => {
   ir('/armar/sushi')
   expect(await screen.findByText(/no existe/i)).toBeInTheDocument()
+})
+
+describe('arrastrar ingredientes sobre la pizza', () => {
+  const rect = { left: 0, top: 0, width: 300, height: 300, right: 300, bottom: 300, x: 0, y: 0 }
+  beforeEach(() => vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(rect))
+  afterEach(() => vi.restoreAllMocks())
+
+  async function abrirRugula() {
+    ir('/armar/pizza')
+    await userEvent.click(await screen.findByRole('tab', { name: /vegetales/i }))
+    return screen.getByRole('button', { name: /rúgula/i })
+  }
+
+  test('mientras se arrastra aparece la imagen pegada al puntero y la pizza se resalta', async () => {
+    const chip = await abrirRugula()
+    fireEvent.pointerDown(chip, { clientX: 5, clientY: 5, button: 0, pointerId: 1 })
+    fireEvent.pointerMove(window, { clientX: 150, clientY: 150, pointerId: 1 })
+    const ghost = await screen.findByTestId('ghost')
+    expect(ghost).toHaveStyle({ left: '150px', top: '150px' })
+    expect(screen.getByTestId('pizza-drop')).toHaveClass('sobre')
+    fireEvent.pointerUp(window, { clientX: 150, clientY: 150, pointerId: 1 })
+  })
+
+  test('soltar sobre la pizza agrega el ingrediente y quita la imagen flotante', async () => {
+    const chip = await abrirRugula()
+    fireEvent.pointerDown(chip, { clientX: 5, clientY: 5, button: 0, pointerId: 1 })
+    fireEvent.pointerMove(window, { clientX: 150, clientY: 150, pointerId: 1 })
+    fireEvent.pointerUp(window, { clientX: 150, clientY: 150, pointerId: 1 })
+    expect(screen.queryByTestId('ghost')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /rúgula/i })).toHaveAttribute('aria-pressed', 'true')
+    // 16.000 (personal) + 2.500 de rúgula
+    expect(screen.getByTestId('total')).toHaveTextContent('18.500')
+  })
+
+  test('soltar fuera de la pizza no agrega nada', async () => {
+    const chip = await abrirRugula()
+    fireEvent.pointerDown(chip, { clientX: 5, clientY: 5, button: 0, pointerId: 1 })
+    fireEvent.pointerMove(window, { clientX: 700, clientY: 700, pointerId: 1 })
+    fireEvent.pointerUp(window, { clientX: 700, clientY: 700, pointerId: 1 })
+    expect(screen.getByRole('button', { name: /rúgula/i })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByTestId('total')).toHaveTextContent('16.000')
+  })
+
+  test('un toque corto sin mover sigue agregando (accesible sin arrastrar)', async () => {
+    const chip = await abrirRugula()
+    await userEvent.click(chip)
+    expect(screen.getByRole('button', { name: /rúgula/i })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  test('la rúgula usa la foto real y reparte piezas por la pizza', async () => {
+    const chip = await abrirRugula()
+    await userEvent.click(chip)
+    const piezas = document.querySelectorAll('img.topping-img[data-ing="rugula"]')
+    expect(piezas.length).toBe(9)
+    expect(piezas[0].getAttribute('src')).toMatch(/img\/ing\/rugula\.webp$/)
+  })
 })
