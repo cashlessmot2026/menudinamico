@@ -38,9 +38,10 @@ test('agregar incrementa el contador del carrito', async () => {
   expect(screen.getByLabelText('Carrito')).toHaveTextContent('1')
 })
 
-test('la landing enlaza a las tres categorías', async () => {
+test('la landing enlaza a las categorías', async () => {
   ir('/')
   expect((await screen.findAllByRole('link', { name: /pizzas/i })).length).toBeGreaterThan(0)
   expect(screen.getAllByRole('link', { name: /hamburguesas/i }).length).toBeGreaterThan(0)
+  expect(screen.getAllByRole('link', { name: /perros calientes/i }).length).toBeGreaterThan(0)
   expect(screen.getAllByRole('link', { name: /asados/i }).length).toBeGreaterThan(0)
 })

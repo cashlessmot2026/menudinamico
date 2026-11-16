@@ -11,8 +11,8 @@ test('el catálogo incluye los ingredientes, masas y tamaños pedidos', () => {
   expect(catalogo.tamanos).toHaveLength(4)
 })
 
-test('hay productos en las tres categorías', () => {
-  for (const c of ['pizzas', 'hamburguesas', 'asados']) {
+test('hay productos en todas las categorías', () => {
+  for (const c of ['pizzas', 'hamburguesas', 'perros', 'asados']) {
     expect(catalogo.productos.some((p) => p.categoria === c)).toBe(true)
   }
 })

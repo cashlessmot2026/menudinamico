@@ -21,7 +21,7 @@ function Chip({ opcion, cantidad, onClick, onPointerDown, arrastrable }) {
       onClick={onClick}
     >
       <span className="chip-circle">
-        {opcion.imagen ? <img className="chip-img" src={opcion.imagen} alt="" draggable={false} style={opcion.capa?.filtro ? { filter: opcion.capa.filtro } : undefined} /> : <span className="chip-emoji">{opcion.emoji}</span>}
+        {opcion.imagen ? <img className="chip-img" src={opcion.capa?.icono || opcion.imagen} alt="" draggable={false} style={{ ...(opcion.capa?.filtro ? { filter: opcion.capa.filtro } : null), ...opcion.capa?.chip }} /> : <span className="chip-emoji">{opcion.emoji}</span>}
         {activo && <span className="chip-badge">{cantidad > 1 ? `×${cantidad}` : '✓'}</span>}
       </span>
       <span className="chip-name">{opcion.nombre}</span>

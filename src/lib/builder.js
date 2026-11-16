@@ -30,13 +30,14 @@ const HAMBURGUESA = {
       op('pollo-crispy', 'Pollo crispy', 5500, '🍗'), op('veggie', 'Garbanzo veggie', 5000, '🥙')
     ] },
     { id: 'quesos', titulo: 'Quesos', tipo: 'multi', opciones: [
-      op('cheddar', 'Cheddar', 2000, '🧀'), op('suizo', 'Suizo', 2500, '🧀'),
-      op('mozzarella', 'Mozzarella', 2500, '🧀'), op('azul', 'Queso azul', 3500, '🧀')
+      op('cheddar', 'Loncha de cheddar', 2000, '🧀'), op('suizo', 'Suizo', 2500, '🧀'),
+      op('mozzarella', 'Lonchas de mozzarella', 2500, '🧀'), op('azul', 'Queso azul', 3500, '🧀')
     ] },
     { id: 'toppings', titulo: 'Toppings', tipo: 'multi', opciones: [
       op('tocineta', 'Tocino crujiente', 3500, '🥓'), op('huevo', 'Huevo frito', 2500, '🍳'),
       op('lechuga', 'Lechuga rizada', 800, '🥬'), op('tomate', 'Tomate', 800, '🍅'),
-      op('cebolla-morada', 'Aros de cebolla morada', 800, '🧅'), op('pepinillos', 'Pepinillos en escabeche', 1000, '🥒'),
+      op('cebolla-morada', 'Aros de cebolla morada', 800, '🧅'), op('cebolla-caramelizada', 'Cebolla caramelizada', 1200, '🧅'),
+      op('papas-ripio', 'Papas ripio', 1500, '🍟'), op('pepinillos', 'Pepinillos en escabeche', 1000, '🥒'),
       op('jalapeno', 'Jalapeño', 1000, '🌶️'), op('aros-cebolla', 'Aros de cebolla apanados', 2500, '🧅'),
       op('champinones', 'Champiñones', 2000, '🍄'), op('pina', 'Piña asada', 1500, '🍍'),
       op('aguacate', 'Aguacate', 3000, '🥑')
@@ -44,6 +45,32 @@ const HAMBURGUESA = {
     { id: 'salsas', titulo: 'Salsas', tipo: 'multi', opciones: [
       op('bbq', 'BBQ', 0, '🟤'), op('mayo-ajo', 'Mayonesa de ajo', 0, '⚪'), op('mostaza', 'Mostaza dorada', 0, '🟡'),
       op('ketchup', 'Kétchup', 0, '🔴'), op('rosada', 'Salsa rosada', 0, '🩷'), op('chimichurri', 'Chimichurri', 500, '🟢'), op('picante', 'Salsa picante', 0, '🌶️')
+    ] }
+  ]
+}
+
+const PERRO = {
+  id: 'perro',
+  titulo: 'Arma tu',
+  em: 'perro caliente',
+  subtitulo: 'Salchicha al carbón, con todo encima',
+  emoji: '🌭',
+  base: 6000,
+  pasos: [
+    { id: 'pan', titulo: 'Pan', tipo: 'single', opciones: [
+      op('clasico', 'Pan de hot dog', 0, '🌭'), op('integral', 'Pan integral', 1000, '🌾')
+    ] },
+    { id: 'salchicha', titulo: 'Salchicha', tipo: 'single', opciones: [
+      op('frankfurt', 'Salchicha Frankfurt', 4000, '🌭'), op('doble-frankfurt', 'Doble salchicha Frankfurt', 7500, '🌭')
+    ] },
+    { id: 'toppings', titulo: 'Toppings', tipo: 'multi', opciones: [
+      op('cheddar-rallado', 'Queso cheddar rallado', 1500, '🧀'), op('tocineta', 'Tocino crujiente', 2500, '🥓'),
+      op('cebolla-caramelizada', 'Cebolla caramelizada', 1200, '🧅'), op('papas-ripio', 'Papas ripio', 1500, '🍟'),
+      op('pepinillos', 'Pepinillos en escabeche', 1000, '🥒')
+    ] },
+    { id: 'salsas', titulo: 'Salsas', tipo: 'multi', opciones: [
+      op('ketchup', 'Kétchup', 0, '🔴'), op('mostaza', 'Mostaza dorada', 0, '🟡'),
+      op('rosada', 'Salsa rosada', 0, '🩷'), op('bbq', 'BBQ', 0, '🟤')
     ] }
   ]
 }
@@ -98,7 +125,7 @@ export function buildersDesde(catalogo) {
       { id: 'extras', titulo: 'Extras', tipo: 'multi', opciones: delCatalogo(ing, 'extra') }
     ]
   }
-  return conImagenes(aplicarBD({ pizza, hamburguesa: HAMBURGUESA, pollo: POLLO }, catalogo))
+  return conImagenes(aplicarBD({ pizza, hamburguesa: HAMBURGUESA, perro: PERRO, pollo: POLLO }, catalogo))
 }
 
 /** Asigna la foto real (si existe) a cada opción; sin foto queda el emoji. */
@@ -109,9 +136,9 @@ function conImagenes(builders) {
       ...b,
       pasos: b.pasos.map((p) => ({
         ...p,
-        opciones: p.opciones.map(({ imagen: _viejo, capa: _c, ...o }) => {
+        opciones: p.opciones.map(({ imagen: _viejo, capa: _c, cubre: _u, ...o }) => {
           const f = imagenDe(k, o.id)
-          return f ? { ...o, imagen: f.src, tam: f.tam, capa: f.tam ? undefined : f } : o
+          return f ? { ...o, imagen: f.src, tam: f.tam, cubre: f.cubre, capa: f.ancho ? f : undefined } : o
         })
       }))
     }
@@ -186,7 +213,7 @@ export function opcionesElegidas(builder, sel) {
   for (const paso of builder.pasos) {
     for (const o of paso.opciones) {
       const cantidad = sel[paso.id]?.[o.id] || 0
-      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji, imagen: o.imagen, tam: o.tam, capa: o.capa })
+      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji, imagen: o.imagen, tam: o.tam, cubre: o.cubre, capa: o.capa })
     }
   }
   return out

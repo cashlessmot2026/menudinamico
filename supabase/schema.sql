@@ -8,7 +8,7 @@ create extension if not exists pgcrypto with schema extensions;
 -- ---------------------------------------------------------------- tablas
 create table if not exists public.productos (
   id          text primary key,
-  categoria   text not null check (categoria in ('pizzas','hamburguesas','asados')),
+  categoria   text not null check (categoria in ('pizzas','hamburguesas','perros','asados')),
   nombre      text not null,
   descripcion text not null default '',
   precio      integer not null check (precio >= 0),
@@ -17,7 +17,7 @@ create table if not exists public.productos (
 );
 
 create table if not exists public.constructores (
-  id            text primary key check (id in ('pizza','hamburguesa','pollo')),
+  id            text primary key check (id in ('pizza','hamburguesa','perro','pollo')),
   base          integer not null default 0 check (base >= 0),
   pasos_unicos  text[] not null default '{}'   -- pasos donde se elige exactamente una opción
 );

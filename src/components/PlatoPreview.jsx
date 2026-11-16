@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { opcionesElegidas } from '../lib/builder.js'
 import { repartir } from '../lib/spread.js'
-import { PAN_BASE } from '../data/imagenes.js'
+import { PAN_BASE, PERRO_PAN, PERRO_SALCHICHA, PIZZA_MASA } from '../data/imagenes.js'
 
 const cae = { initial: { y: -120, opacity: 0, scale: 1.6 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.4 } }
 
@@ -39,7 +39,8 @@ function Pieza({ o, p, i }) {
 function Pizza({ elegidas, sel, builder, pizzaRef, sobre, impacto }) {
   const tamIdx = Math.max(0, builder.pasos[0].opciones.findIndex((o) => sel.tamano?.[o.id]))
   const escala = 0.72 + tamIdx * 0.09
-  const toppings = elegidas.filter((o) => !['tamano', 'masa', 'salsa'].includes(o.paso))
+  const cubiertas = elegidas.filter((o) => o.cubre) // el queso derretido tapa la pizza entera
+  const toppings = elegidas.filter((o) => !['tamano', 'masa', 'salsa'].includes(o.paso) && !o.cubre)
   const salsa = Object.keys(sel.salsa || {})[0]
   const colorSalsa = { 'pasta-tomate': '#d62828', pesto: '#5a9a3a', bbq: '#6b3a1e', blanca: '#f1e6c8', 'ajo-aceite': '#e8c872' }[salsa] || '#d62828'
   const r = impacto && pizzaRef?.current ? pizzaRef.current.getBoundingClientRect() : null
@@ -51,8 +52,25 @@ function Pizza({ elegidas, sel, builder, pizzaRef, sobre, impacto }) {
       animate={{ scale: escala, rotate: [0, 2, 0] }}
       transition={{ rotate: { repeat: Infinity, duration: 8 }, scale: { type: 'spring' } }}
     >
-      <div className="pizza-crust" />
+      <img className="pizza-masa" src={PIZZA_MASA} alt="" draggable={false} />
       <div className="pizza-sauce" style={{ background: colorSalsa }} />
+      <AnimatePresence>
+        {cubiertas.flatMap((o) => Array.from({ length: o.cantidad }, (_, i) => (
+          <motion.img
+            key={`${o.id}-cubre-${i}`}
+            className="pizza-queso"
+            data-ing={o.id}
+            src={o.imagen}
+            alt=""
+            draggable={false}
+            style={{ rotate: i * 90 }}
+            initial={{ opacity: 0, scale: 1.18 }}
+            animate={{ opacity: i === 0 ? 0.96 : 0.7, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+            transition={{ type: 'spring', stiffness: 120, damping: 16 }}
+          />
+        )))}
+      </AnimatePresence>
       <AnimatePresence>
         {toppings.flatMap((o) => repartir(o.id, o.cantidad).map((p, i) => <Pieza key={`${o.id}-${i}`} o={o} p={p} i={i} />))}
       </AnimatePresence>
@@ -139,7 +157,7 @@ function Capa({ c, i }) {
         src={c.foto.src}
         alt={c.nombre}
         draggable={false}
-        style={{ ...style, filter: [c.filtro, 'drop-shadow(0 5px 4px rgba(0,0,0,.45))'].filter(Boolean).join(' ') }}
+        style={{ ...style, objectFit: c.foto.estirar ? 'fill' : undefined, filter: [c.filtro, 'drop-shadow(0 5px 4px rgba(0,0,0,.45))'].filter(Boolean).join(' ') }}
         {...anim}
       />
     )
@@ -151,6 +169,57 @@ function Capa({ c, i }) {
     <motion.div className="capa capa-emoji" data-capa={c.key} title={c.nombre} style={style} {...anim}>
       {c.emoji} {c.emoji} {c.emoji}
     </motion.div>
+  )
+}
+
+const ANCHO_PERRO = 300
+const SALCHICHA_Y = 46 // elevación de la salchicha dentro del pan (px)
+
+/**
+ * Perro caliente visto desde arriba: pan abierto, salchicha encima y los ingredientes a lo largo de ella.
+ * Cada capa lleva su elevación `y` (px) y se escalona un poco para que se vea lo que hay debajo.
+ * Las salsas son cintas con el largo de la salchicha, así que quedan ajustadas al pan.
+ */
+export function capasPerro(elegidas, ancho = ANCHO_PERRO) {
+  const pan = elegidas.find((o) => o.paso === 'pan')
+  const salchicha = elegidas.find((o) => o.paso === 'salchicha')
+  const capas = [{ key: 'pan', tipo: 'foto', foto: pan?.capa || PERRO_PAN, filtro: pan?.capa?.filtro, nombre: pan?.nombre || 'Pan de hot dog', y: 0 }]
+  const salchichas = salchicha?.id === 'doble-frankfurt' ? 2 : salchicha ? 1 : 0
+  for (let i = 0; i < salchichas; i++) {
+    capas.push({ key: `salchicha-${i}`, tipo: 'foto', foto: salchicha.capa || PERRO_SALCHICHA, nombre: salchicha.nombre, y: SALCHICHA_Y + i * 24 })
+  }
+  const encima = []
+  for (const o of elegidas) {
+    if (o.paso === 'pan' || o.paso === 'salchicha') continue
+    for (let i = 0; i < o.cantidad; i++) {
+      const key = `${o.paso}-${o.id}-${i}`
+      encima.push(o.capa ? { key, tipo: 'foto', foto: o.capa, filtro: o.capa.filtro, nombre: o.nombre } : { key, tipo: 'emoji', emoji: o.emoji, nombre: o.nombre })
+    }
+  }
+  const base = SALCHICHA_Y + 18 + (salchichas > 1 ? 24 : 0)
+  const paso = Math.min(9, 80 / Math.max(1, encima.length))
+  encima.forEach((c, i) => capas.push({ ...c, y: base + i * paso }))
+  for (const c of capas) {
+    if (c.tipo === 'foto') {
+      c.ancho = ancho * c.foto.ancho
+      c.alto = c.ancho * c.foto.aspecto * (c.foto.aplastar || 1)
+    } else {
+      c.ancho = ancho * 0.5
+      c.alto = 30
+    }
+  }
+  return capas
+}
+
+function Perro({ elegidas }) {
+  const capas = capasPerro(elegidas)
+  return (
+    <div className="burger-stack perro-stack" data-testid="perro-stack">
+      <div className="burger-plato" />
+      <AnimatePresence>
+        {capas.map((c, i) => <Capa key={c.key} c={c} i={i} />)}
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -187,6 +256,7 @@ export default function PlatoPreview({ builder, sel, pizzaRef, sobre = false, im
       <div className="preview-stage">
         {builder.id === 'pizza' && <Pizza elegidas={elegidas} sel={sel} builder={builder} pizzaRef={pizzaRef} sobre={sobre} impacto={impacto} />}
         {builder.id === 'hamburguesa' && <Hamburguesa elegidas={elegidas} />}
+        {builder.id === 'perro' && <Perro elegidas={elegidas} />}
         {builder.id === 'pollo' && <Pollo elegidas={elegidas} />}
       </div>
     </div>

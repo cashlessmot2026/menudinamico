@@ -5,7 +5,7 @@ import { categorias } from '../data/categorias.js'
 import { leerPedidosLocales } from '../lib/api.js'
 
 const PASOS = [
-  ['1', 'Elige o arma', 'Escoge del menú o crea tu pizza, hamburguesa o pollo a tu gusto.'],
+  ['1', 'Elige o arma', 'Escoge del menú o crea tu pizza, hamburguesa, perro caliente o pollo a tu gusto.'],
   ['2', 'Deja tus datos', 'Nombre, teléfono y dirección para el domicilio.'],
   ['3', 'Sigue tu pedido', 'Mira en vivo cuándo se prepara, sale y llega a tu puerta.']
 ]
@@ -25,7 +25,7 @@ export default function Landing() {
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             Pide como te gusta, <em>a tu manera</em>
           </motion.h1>
-          <p className="muted">Pizzas, hamburguesas y asados. Arma tu plato ingrediente por ingrediente y lo llevamos a tu casa.</p>
+          <p className="muted">Pizzas, hamburguesas, perros calientes y asados. Arma tu plato ingrediente por ingrediente y lo llevamos a tu casa.</p>
           <div className="hero-cta">
             <Link className="btn btn-primary" to="/armar/pizza">Armar mi pizza</Link>
             <Link className="btn" to="/menu/pizzas">Ver el menú</Link>

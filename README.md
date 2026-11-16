@@ -1,11 +1,11 @@
 # Demo · Menú Dinámico (PWA)
 
-App instalable en React para pedir domicilios de **pizzas, hamburguesas y asados**, con constructores animados en 3D, seguimiento del pedido y panel de administración. Backend: Supabase (sin proveedores externos de auth).
+App instalable en React para pedir domicilios de **pizzas, hamburguesas, perros calientes y asados**, con constructores animados en 3D, seguimiento del pedido y panel de administración. Backend: Supabase (sin proveedores externos de auth).
 
 ## Qué incluye
 
 - **Landing** del negocio "Demo", menú por categoría y carrito.
-- **Constructores** (como los videos de referencia): pizza (tamaño, masa, salsa, quesos, carnes, vegetales como rúgula, lechuga, aceitunas verdes y moradas, cebollas, pasta de tomate…), hamburguesa y pollo a la brasa.
+- **Constructores** (como los videos de referencia): pizza (tamaño, masa, salsa, quesos, carnes, vegetales como rúgula, lechuga, aceitunas verdes y moradas, cebollas, pasta de tomate…), hamburguesa (torre por capas con fotos reales), perro caliente (pan, salchicha, toppings y salsas) y pollo a la brasa.
 - **Checkout** con datos de domicilio obligatorios y **seguimiento** del estado (recibido → preparando → en camino → entregado / cancelado). Los pedidos nunca se borran y se consultan con teléfono + código (`DEM-XXXX`).
 - **Panel admin** (`/admin`, clave inicial `1234`): pedidos, cambio de estado, cancelación con motivo, catálogo/precios/disponibilidad y resumen del día.
 - **PWA**: instalable, con caché offline del catálogo.

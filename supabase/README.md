@@ -11,6 +11,13 @@ Proyecto: `https://iqqfxghsciwusyidlbze.supabase.co`
 
 Los tres scripts son idempotentes: se pueden volver a ejecutar sin duplicar datos.
 
+## Migraciones (solo si tu base ya estaba instalada)
+
+En una base nueva `schema.sql` + `seed.sql` ya incluyen todo. Si la instalaste antes, ejecuta en el SQL Editor, en este orden y una sola vez cada una:
+
+1. `migracion-2026-11-fotos-hamburguesa.sql` (nombres nuevos, pan con sésamo y salsa rosada).
+2. `migracion-2026-11-perros-calientes.sql` (categoría y constructor de perros calientes, más ingredientes nuevos).
+
 ## Seguridad
 
 - Las tablas de pedidos y de admin **no tienen policies**: el público no puede leerlas ni escribirlas directamente.

@@ -17,9 +17,14 @@ insert into public.productos (id, categoria, nombre, descripcion, precio, dispon
 insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('asado-chuzos', 'asados', 'Chuzos mixtos', 'Res, pollo y chorizo con papa y yuca.', 28000, true, 13) on conflict (id) do nothing;
 insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('asado-churrasco', 'asados', 'Churrasco', 'Corte de res 300 g con chimichurri.', 40000, true, 14) on conflict (id) do nothing;
 
+insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('perro-clasico', 'perros', 'Perro clásico', 'Salchicha Frankfurt, kétchup y mostaza.', 12000, true, 15) on conflict (id) do nothing;
+insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('perro-cheddar', 'perros', 'Perro con cheddar', 'Salchicha Frankfurt, queso cheddar rallado y mostaza.', 14000, true, 16) on conflict (id) do nothing;
+insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('perro-ripio', 'perros', 'Perro con papas ripio', 'Salchicha Frankfurt, papas ripio, kétchup y salsa rosada.', 15000, true, 17) on conflict (id) do nothing;
+insert into public.productos (id, categoria, nombre, descripcion, precio, disponible, orden) values ('perro-caramelizado', 'perros', 'Perro caramelizado', 'Salchicha Frankfurt, cebolla caramelizada, tocino crujiente y cheddar.', 16000, true, 18) on conflict (id) do nothing;
 -- constructores
 insert into public.constructores (id, base, pasos_unicos) values ('pizza', 0, array['tamano', 'masa', 'salsa']::text[]) on conflict (id) do update set pasos_unicos = excluded.pasos_unicos;
 insert into public.constructores (id, base, pasos_unicos) values ('hamburguesa', 12000, array['pan', 'carne']::text[]) on conflict (id) do update set pasos_unicos = excluded.pasos_unicos;
+insert into public.constructores (id, base, pasos_unicos) values ('perro', 6000, array['pan', 'salchicha']::text[]) on conflict (id) do update set pasos_unicos = excluded.pasos_unicos;
 insert into public.constructores (id, base, pasos_unicos) values ('pollo', 0, array['plato']::text[]) on conflict (id) do update set pasos_unicos = excluded.pasos_unicos;
 
 -- opciones
@@ -44,7 +49,7 @@ insert into public.opciones (constructor, paso, id, nombre, precio, disponible, 
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'quesos', 'cheddar', 'Cheddar', 3000, true, 18) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'quesos', 'queso-azul', 'Queso azul', 4500, true, 19) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'quesos', 'burrata', 'Burrata', 6500, true, 20) on conflict (constructor, paso, id) do nothing;
-insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'carnes', 'pepperoni', 'Pepperoni', 4000, true, 21) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'carnes', 'pepperoni', 'Rodajas de pepperoni', 4000, true, 21) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'carnes', 'jamon', 'Jamón', 3500, true, 22) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'carnes', 'tocineta', 'Tocino crujiente', 4000, true, 23) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pizza', 'carnes', 'salami', 'Salami', 4000, true, 24) on conflict (constructor, paso, id) do nothing;
@@ -78,9 +83,9 @@ insert into public.opciones (constructor, paso, id, nombre, precio, disponible, 
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'carne', 'doble-res', 'Doble carne a la parrilla', 12000, true, 5) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'carne', 'pollo-crispy', 'Pollo crispy', 5500, true, 6) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'carne', 'veggie', 'Garbanzo veggie', 5000, true, 7) on conflict (constructor, paso, id) do nothing;
-insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'cheddar', 'Cheddar', 2000, true, 8) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'cheddar', 'Loncha de cheddar', 2000, true, 8) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'suizo', 'Suizo', 2500, true, 9) on conflict (constructor, paso, id) do nothing;
-insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'mozzarella', 'Mozzarella', 2500, true, 10) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'mozzarella', 'Lonchas de mozzarella', 2500, true, 10) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'quesos', 'azul', 'Queso azul', 3500, true, 11) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'toppings', 'tocineta', 'Tocino crujiente', 3500, true, 12) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'toppings', 'huevo', 'Huevo frito', 2500, true, 13) on conflict (constructor, paso, id) do nothing;
@@ -120,3 +125,18 @@ insert into public.opciones (constructor, paso, id, nombre, precio, disponible, 
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pollo', 'extras', 'limonada', 'Limonada natural', 5000, true, 17) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pollo', 'extras', 'chicha', 'Chicha', 5000, true, 18) on conflict (constructor, paso, id) do nothing;
 insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('pollo', 'extras', 'chorizo', 'Chorizo', 6000, true, 19) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'toppings', 'cebolla-caramelizada', 'Cebolla caramelizada', 1200, true, 29) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('hamburguesa', 'toppings', 'papas-ripio', 'Papas ripio', 1500, true, 30) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'pan', 'clasico', 'Pan de hot dog', 0, true, 40) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'pan', 'integral', 'Pan integral', 1000, true, 41) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salchicha', 'frankfurt', 'Salchicha Frankfurt', 4000, true, 42) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salchicha', 'doble-frankfurt', 'Doble salchicha Frankfurt', 7500, true, 43) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'toppings', 'cheddar-rallado', 'Queso cheddar rallado', 1500, true, 44) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'toppings', 'tocineta', 'Tocino crujiente', 2500, true, 45) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'toppings', 'cebolla-caramelizada', 'Cebolla caramelizada', 1200, true, 46) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'toppings', 'papas-ripio', 'Papas ripio', 1500, true, 47) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'toppings', 'pepinillos', 'Pepinillos en escabeche', 1000, true, 48) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salsas', 'ketchup', 'Kétchup', 0, true, 49) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salsas', 'mostaza', 'Mostaza dorada', 0, true, 50) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salsas', 'rosada', 'Salsa rosada', 0, true, 51) on conflict (constructor, paso, id) do nothing;
+insert into public.opciones (constructor, paso, id, nombre, precio, disponible, orden) values ('perro', 'salsas', 'bbq', 'BBQ', 0, true, 52) on conflict (constructor, paso, id) do nothing;

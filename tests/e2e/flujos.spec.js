@@ -74,7 +74,7 @@ test('sin scroll horizontal en móvil (375 px)', async ({ browser, context }) =>
   const movil = await browser.newContext({ viewport: { width: 375, height: 800 } })
   await fakeSupabase(movil)
   const page = await movil.newPage()
-  for (const ruta of ['/', '/menu/pizzas', '/armar/pizza', '/armar/hamburguesa', '/armar/pollo', '/seguimiento', '/admin']) {
+  for (const ruta of ['/', '/menu/pizzas', '/armar/pizza', '/armar/hamburguesa', '/armar/perro', '/armar/pollo', '/seguimiento', '/admin']) {
     await page.goto(ruta)
     await page.waitForLoadState('networkidle')
     const ancho = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }))

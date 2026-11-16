@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import Tilt3D from './Tilt3D.jsx'
 import { cop } from '../lib/format.js'
 
-const EMOJI = { pizzas: '🍕', hamburguesas: '🍔', asados: '🍗' }
+const EMOJI = { pizzas: '🍕', hamburguesas: '🍔', perros: '🌭', asados: '🍗' }
 
 export default function ProductCard({ producto, onAdd }) {
   const agotado = !producto.disponible

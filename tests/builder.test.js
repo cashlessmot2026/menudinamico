@@ -3,8 +3,8 @@ import { catalogo } from '../src/data/catalogo.js'
 
 const builders = buildersDesde(catalogo)
 
-test('hay tres constructores: pizza, hamburguesa y pollo', () => {
-  expect(Object.keys(builders).sort()).toEqual(['hamburguesa', 'pizza', 'pollo'])
+test('hay cuatro constructores: pizza, hamburguesa, perro y pollo', () => {
+  expect(Object.keys(builders).sort()).toEqual(['hamburguesa', 'perro', 'pizza', 'pollo'])
 })
 
 test('seleccionInicial elige la primera opción disponible de cada paso único', () => {

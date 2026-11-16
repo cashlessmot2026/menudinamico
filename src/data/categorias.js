@@ -14,6 +14,13 @@ export const categorias = [
     constructor: { ruta: '/armar/hamburguesa', texto: 'Arma tu hamburguesa' }
   },
   {
+    id: 'perros',
+    titulo: 'Perros calientes',
+    emoji: '🌭',
+    lema: 'Al carbón, con todo lo que quieras encima',
+    constructor: { ruta: '/armar/perro', texto: 'Arma tu perro caliente' }
+  },
+  {
     id: 'asados',
     titulo: 'Asados',
     emoji: '🍗',
