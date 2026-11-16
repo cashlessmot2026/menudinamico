@@ -10,7 +10,7 @@ PWA instalable en React para el negocio **Demo** (pizzas, hamburguesas, asados).
 - Fotogramas de los videos se extraen con el navegador (Playwright) porque no hay ffmpeg.
 - Moneda: COP. Catálogo y precios demo inventados, editables por el admin.
 - Imágenes disponibles: `pizzas/aceituna verde.*`, `pizzas/rugula.jpg`, `pizzas/tomate.jpeg`. El resto se ilustra con SVG/CSS.
-- Supabase: URL `https://tgioyejecmcbxrwcjuub.supabase.co`, llave publicable en variable de entorno `VITE_SUPABASE_ANON_KEY`. La llave publicable no es secreta, pero no se hardcodea.
+- Supabase: URL `https://iqqfxghsciwusyidlbze.supabase.co`, llave publicable en variable de entorno `VITE_SUPABASE_ANON_KEY`. La llave publicable no es secreta, pero no se hardcodea.
 - Las tablas no se pueden crear con la llave publicable: se entregan `schema.sql` y `seed.sql` para ejecutar en el SQL Editor.
 - Seguimiento del cliente (opción A): el pedido y el teléfono se guardan en el dispositivo; además se consulta con **teléfono + código de pedido**, sin cuentas.
 - Subida a `github.com/cashlessmot2026/menudinamico` solo tras confirmación explícita del usuario.

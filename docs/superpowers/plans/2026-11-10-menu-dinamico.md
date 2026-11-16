@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Moneda COP, formato `es-CO` sin decimales.
-- Supabase URL `https://tgioyejecmcbxrwcjuub.supabase.co`; llave en `VITE_SUPABASE_ANON_KEY` (nunca hardcodeada). URL en `VITE_SUPABASE_URL`.
+- Supabase URL `https://iqqfxghsciwusyidlbze.supabase.co`; llave en `VITE_SUPABASE_ANON_KEY` (nunca hardcodeada). URL en `VITE_SUPABASE_URL`.
 - Estados: `recibido`, `preparando`, `en_camino`, `entregado`, `cancelado`. Los pedidos nunca se borran.
 - Código de pedido `DEM-XXXX` (4 caracteres de `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`).
 - Checkout obligatorio: nombre, teléfono, dirección, barrio, referencia.

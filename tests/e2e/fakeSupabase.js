@@ -5,7 +5,7 @@ const SIGUIENTE = { recibido: 'preparando', preparando: 'en_camino', en_camino: 
 export async function fakeSupabase(context) {
   const db = { pedidos: [], seq: 1 }
 
-  await context.route('https://tgioyejecmcbxrwcjuub.supabase.co/**', async (route) => {
+  await context.route('https://iqqfxghsciwusyidlbze.supabase.co/**', async (route) => {
     const req = route.request()
     if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS })
     const json = (body, status = 200) =>

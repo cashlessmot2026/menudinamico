@@ -54,7 +54,7 @@ test('precioBuilder hamburguesa incluye base y resumen lista lo elegido', () => 
   const b = builders.hamburguesa
   const sel = toggleOpcion(b, seleccionInicial(b), 'toppings', 'tocineta')
   expect(precioBuilder(b, sel)).toBeGreaterThan(b.base)
-  expect(resumenSeleccion(b, sel)).toContain('Tocineta')
+  expect(resumenSeleccion(b, sel)).toContain('Tocino crujiente')
 })
 
 test('precios y disponibilidad de la BD (opciones) sobrescriben los locales', () => {

@@ -20,8 +20,8 @@ jobs:
     env:
       VITE_BASE: /menudinamico/
       # La llave publicable de Supabase no es secreta (va en el navegador); la seguridad la da RLS.
-      VITE_SUPABASE_URL: https://tgioyejecmcbxrwcjuub.supabase.co
-      VITE_SUPABASE_ANON_KEY: sb_publishable_bq8ZvvJu5Xxl_uXXYA__1A_Q_wt__hK
+      VITE_SUPABASE_URL: https://iqqfxghsciwusyidlbze.supabase.co
+      VITE_SUPABASE_ANON_KEY: sb_publishable_zZRYDAq3RVg8qpkw9O-LWA_v7b4u7mD
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

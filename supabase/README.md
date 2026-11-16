@@ -1,6 +1,6 @@
 # Base de datos (Supabase)
 
-Proyecto: `https://tgioyejecmcbxrwcjuub.supabase.co`
+Proyecto: `https://iqqfxghsciwusyidlbze.supabase.co`
 
 ## Instalación (una sola vez)
 

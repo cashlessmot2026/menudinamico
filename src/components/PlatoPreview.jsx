@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { opcionesElegidas } from '../lib/builder.js'
 import { repartir } from '../lib/spread.js'
+import { PAN_BASE } from '../data/imagenes.js'
 
 const cae = { initial: { y: -120, opacity: 0, scale: 1.6 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.4 } }
 
@@ -69,19 +70,98 @@ function Pizza({ elegidas, sel, builder, pizzaRef, sobre, impacto }) {
   )
 }
 
-function Hamburguesa({ elegidas }) {
-  const capas = elegidas.filter((o) => o.paso !== 'pan')
+const ANCHO_BURGER = 230
+const ALTO_MAX = 286
+const QUESO = { cheddar: '#f6a823', suizo: '#f2d77e', mozzarella: '#f8f3e3', azul: '#e3e9e4' }
+
+/**
+ * Convierte lo elegido en capas apiladas de abajo hacia arriba: base del pan, carne, quesos, toppings,
+ * salsas y tapa. Cada capa cae sobre la anterior y la tapa solo en parte: de la anterior queda a la vista
+ * una franja (`grosor`), como en el video de referencia.
+ * @returns {{key:string, tipo:'foto'|'queso'|'emoji', alto:number, ancho:number, visible:number, y:number}[]}
+ */
+export function capasHamburguesa(elegidas, ancho = ANCHO_BURGER, altoMax = ALTO_MAX) {
+  const pan = elegidas.find((o) => o.paso === 'pan')
+  const filtroPan = pan?.capa?.filtro
+  const capas = [{ key: 'pan-base', tipo: 'foto', foto: PAN_BASE, filtro: filtroPan, nombre: 'Base de pan' }]
+  for (const o of elegidas) {
+    if (o.paso === 'pan') continue
+    const veces = o.id === 'doble-res' ? 2 : o.cantidad
+    for (let i = 0; i < veces; i++) {
+      const key = `${o.paso}-${o.id}-${i}`
+      if (o.capa) capas.push({ key, tipo: 'foto', foto: o.capa, filtro: o.capa.filtro, nombre: o.nombre })
+      else if (o.paso === 'quesos') capas.push({ key, tipo: 'queso', color: QUESO[o.id] || '#f6c453', nombre: o.nombre })
+      else capas.push({ key, tipo: 'emoji', emoji: o.emoji, nombre: o.nombre })
+    }
+  }
+  capas.push({ key: 'pan-tapa', tipo: 'foto', foto: pan?.capa || PAN_BASE, filtro: filtroPan, nombre: pan?.nombre || 'Pan' })
+
+  for (const c of capas) {
+    if (c.tipo === 'foto') {
+      c.ancho = ancho * c.foto.ancho
+      c.alto = c.ancho * c.foto.aspecto * (c.foto.aplastar || 1)
+      c.visible = c.alto * c.foto.grosor
+    } else if (c.tipo === 'queso') {
+      c.ancho = ancho * 0.9
+      c.alto = 34
+      c.visible = 9
+    } else {
+      c.ancho = ancho * 0.86
+      c.alto = 34
+      c.visible = 16
+    }
+  }
+  // Si la torre no cabe, se comprimen las franjas visibles (nunca el tamaño de las fotos).
+  const tapa = capas[capas.length - 1]
+  const franjas = capas.slice(0, -1).reduce((s, c) => s + c.visible, 0)
+  const factor = franjas + tapa.alto > altoMax ? Math.max(0.05, (altoMax - tapa.alto) / franjas) : 1
+  let y = 0
+  for (const c of capas) {
+    c.y = y
+    y += c.visible * factor
+  }
+  return capas
+}
+
+function Capa({ c, i }) {
+  const style = { width: c.ancho, height: c.alto, marginLeft: -c.ancho / 2, zIndex: i + 1 }
+  const anim = {
+    initial: { y: -c.y - 190, opacity: 0, scale: 1.08 },
+    animate: { y: -c.y, opacity: 1, scale: 1 },
+    exit: { y: -c.y - 70, opacity: 0, transition: { duration: 0.2 } },
+    transition: { type: 'spring', stiffness: 210, damping: 18, mass: 0.9 }
+  }
+  if (c.tipo === 'foto') {
+    return (
+      <motion.img
+        className="capa capa-foto"
+        data-capa={c.key}
+        src={c.foto.src}
+        alt={c.nombre}
+        draggable={false}
+        style={{ ...style, filter: [c.filtro, 'drop-shadow(0 5px 4px rgba(0,0,0,.45))'].filter(Boolean).join(' ') }}
+        {...anim}
+      />
+    )
+  }
+  if (c.tipo === 'queso') {
+    return <motion.div className="capa capa-queso" data-capa={c.key} title={c.nombre} style={{ ...style, background: c.color }} {...anim} />
+  }
   return (
-    <div className="burger-stack">
-      <div className="bun bun-top" />
+    <motion.div className="capa capa-emoji" data-capa={c.key} title={c.nombre} style={style} {...anim}>
+      {c.emoji} {c.emoji} {c.emoji}
+    </motion.div>
+  )
+}
+
+function Hamburguesa({ elegidas }) {
+  const capas = capasHamburguesa(elegidas)
+  return (
+    <div className="burger-stack" data-testid="burger-stack">
+      <div className="burger-plato" />
       <AnimatePresence>
-        {capas.map((o) => (
-          <motion.div key={o.id + o.paso} className="burger-layer" layout {...cae}>
-            {Array.from({ length: o.cantidad }, () => o.emoji).join(' ')} <small>{o.nombre}</small>
-          </motion.div>
-        ))}
+        {capas.map((c, i) => <Capa key={c.key} c={c} i={i} />)}
       </AnimatePresence>
-      <div className="bun bun-bottom" />
     </div>
   )
 }

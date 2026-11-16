@@ -32,6 +32,16 @@ Las funciones SQL se prueban con `supabase/tests.sql` (en el SQL Editor).
 ## Variables de entorno
 `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (llave publicable; no es secreta, pero no se escribe en el código).
 
+## Cuenta y base de datos (Supabase)
+| Dato | Valor |
+|---|---|
+| Correo de la cuenta donde está la base de datos | `Cashlesscol2026@gmail.com` |
+| URL de la API | `https://iqqfxghsciwusyidlbze.supabase.co` |
+| Llave publicable (`VITE_SUPABASE_ANON_KEY`) | `sb_publishable_zZRYDAq3RVg8qpkw9O-LWA_v7b4u7mD` |
+
+La llave publicable solo permite lo que las políticas RLS dejan al público. Nunca pongas aquí la llave `secret` ni la clave de admin.
+Una base nueva está vacía: ejecuta `schema.sql`, `seed.sql` y, si aplica, `migracion-2026-11-fotos-hamburguesa.sql` (ver `supabase/README.md`).
+
 ## Seguridad
 - RLS activo; el público solo lee el catálogo y usa las funciones `crear_pedido` y `consultar_pedido`.
 - El servidor recalcula todos los precios; los precios que envía el cliente se ignoran.

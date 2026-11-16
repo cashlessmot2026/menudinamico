@@ -22,11 +22,11 @@ const HAMBURGUESA = {
   base: 12000,
   pasos: [
     { id: 'pan', titulo: 'Pan', tipo: 'single', opciones: [
-      op('brioche', 'Brioche', 0, '🍞'), op('integral', 'Integral', 1500, '🌾'),
+      op('brioche', 'Pan dorado', 0, '🍞'), op('sesamo', 'Pan con sésamo', 500, '🍔'), op('integral', 'Integral', 1500, '🌾'),
       op('sin-gluten', 'Sin gluten', 3000, '🥖'), op('papa', 'Pan de papa', 1000, '🥔')
     ] },
     { id: 'carne', titulo: 'Carne', tipo: 'single', opciones: [
-      op('res', 'Res 150 g', 6000, '🥩'), op('doble-res', 'Doble res', 12000, '🥩'),
+      op('res', 'Carne de res a la parrilla', 6000, '🥩'), op('doble-res', 'Doble carne a la parrilla', 12000, '🥩'),
       op('pollo-crispy', 'Pollo crispy', 5500, '🍗'), op('veggie', 'Garbanzo veggie', 5000, '🥙')
     ] },
     { id: 'quesos', titulo: 'Quesos', tipo: 'multi', opciones: [
@@ -34,16 +34,16 @@ const HAMBURGUESA = {
       op('mozzarella', 'Mozzarella', 2500, '🧀'), op('azul', 'Queso azul', 3500, '🧀')
     ] },
     { id: 'toppings', titulo: 'Toppings', tipo: 'multi', opciones: [
-      op('tocineta', 'Tocineta', 3500, '🥓'), op('huevo', 'Huevo frito', 2500, '🍳'),
-      op('lechuga', 'Lechuga', 800, '🥬'), op('tomate', 'Tomate', 800, '🍅'),
-      op('cebolla-morada', 'Cebolla morada', 800, '🧅'), op('pepinillos', 'Pepinillos', 1000, '🥒'),
-      op('jalapeno', 'Jalapeño', 1000, '🌶️'), op('aros-cebolla', 'Aros de cebolla', 2500, '🧅'),
+      op('tocineta', 'Tocino crujiente', 3500, '🥓'), op('huevo', 'Huevo frito', 2500, '🍳'),
+      op('lechuga', 'Lechuga rizada', 800, '🥬'), op('tomate', 'Tomate', 800, '🍅'),
+      op('cebolla-morada', 'Aros de cebolla morada', 800, '🧅'), op('pepinillos', 'Pepinillos en escabeche', 1000, '🥒'),
+      op('jalapeno', 'Jalapeño', 1000, '🌶️'), op('aros-cebolla', 'Aros de cebolla apanados', 2500, '🧅'),
       op('champinones', 'Champiñones', 2000, '🍄'), op('pina', 'Piña asada', 1500, '🍍'),
       op('aguacate', 'Aguacate', 3000, '🥑')
     ] },
     { id: 'salsas', titulo: 'Salsas', tipo: 'multi', opciones: [
-      op('bbq', 'BBQ', 0, '🟤'), op('mayo-ajo', 'Mayonesa de ajo', 0, '⚪'), op('mostaza', 'Mostaza', 0, '🟡'),
-      op('ketchup', 'Ketchup', 0, '🔴'), op('chimichurri', 'Chimichurri', 500, '🟢'), op('picante', 'Salsa picante', 0, '🌶️')
+      op('bbq', 'BBQ', 0, '🟤'), op('mayo-ajo', 'Mayonesa de ajo', 0, '⚪'), op('mostaza', 'Mostaza dorada', 0, '🟡'),
+      op('ketchup', 'Kétchup', 0, '🔴'), op('rosada', 'Salsa rosada', 0, '🩷'), op('chimichurri', 'Chimichurri', 500, '🟢'), op('picante', 'Salsa picante', 0, '🌶️')
     ] }
   ]
 }
@@ -109,9 +109,9 @@ function conImagenes(builders) {
       ...b,
       pasos: b.pasos.map((p) => ({
         ...p,
-        opciones: p.opciones.map(({ imagen: _viejo, ...o }) => {
-          const f = imagenDe(o.id)
-          return f ? { ...o, imagen: f.src, tam: f.tam } : o
+        opciones: p.opciones.map(({ imagen: _viejo, capa: _c, ...o }) => {
+          const f = imagenDe(k, o.id)
+          return f ? { ...o, imagen: f.src, tam: f.tam, capa: f.tam ? undefined : f } : o
         })
       }))
     }
@@ -186,7 +186,7 @@ export function opcionesElegidas(builder, sel) {
   for (const paso of builder.pasos) {
     for (const o of paso.opciones) {
       const cantidad = sel[paso.id]?.[o.id] || 0
-      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji, imagen: o.imagen, tam: o.tam })
+      if (cantidad > 0 && o.disponible) out.push({ paso: paso.id, id: o.id, cantidad, nombre: o.nombre, precio: o.precio, emoji: o.emoji, imagen: o.imagen, tam: o.tam, capa: o.capa })
     }
   }
   return out
