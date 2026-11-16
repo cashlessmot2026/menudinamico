@@ -40,9 +40,7 @@ function Pizza({ elegidas, sel, builder, pizzaRef, sobre, impacto }) {
   const tamIdx = Math.max(0, builder.pasos[0].opciones.findIndex((o) => sel.tamano?.[o.id]))
   const escala = 0.72 + tamIdx * 0.09
   const cubiertas = elegidas.filter((o) => o.cubre) // el queso derretido tapa la pizza entera
-  const toppings = elegidas.filter((o) => !['tamano', 'masa', 'salsa'].includes(o.paso) && !o.cubre)
-  const salsa = Object.keys(sel.salsa || {})[0]
-  const colorSalsa = { 'pasta-tomate': '#d62828', pesto: '#5a9a3a', bbq: '#6b3a1e', blanca: '#f1e6c8', 'ajo-aceite': '#e8c872' }[salsa] || '#d62828'
+  const toppings = elegidas.filter((o) => !['tamano', 'masa'].includes(o.paso) && !o.cubre)
   const r = impacto && pizzaRef?.current ? pizzaRef.current.getBoundingClientRect() : null
   return (
     <motion.div
@@ -53,7 +51,6 @@ function Pizza({ elegidas, sel, builder, pizzaRef, sobre, impacto }) {
       transition={{ rotate: { repeat: Infinity, duration: 8 }, scale: { type: 'spring' } }}
     >
       <img className="pizza-masa" src={PIZZA_MASA} alt="" draggable={false} />
-      <div className="pizza-sauce" style={{ background: colorSalsa }} />
       <AnimatePresence>
         {cubiertas.flatMap((o) => Array.from({ length: o.cantidad }, (_, i) => (
           <motion.img

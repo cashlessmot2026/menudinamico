@@ -5,7 +5,7 @@ App instalable en React para pedir domicilios de **pizzas, hamburguesas, perros 
 ## Qué incluye
 
 - **Landing** del negocio "Demo", menú por categoría y carrito.
-- **Constructores** (como los videos de referencia): pizza (tamaño, masa, salsa, quesos, carnes, vegetales como rúgula, lechuga, aceitunas verdes y moradas, cebollas, pasta de tomate…), hamburguesa (torre por capas con fotos reales), perro caliente (pan, salchicha, toppings y salsas) y pollo a la brasa.
+- **Constructores** (como los videos de referencia): pizza (tamaño, masa, quesos, carnes, vegetales como rúgula, lechuga, aceitunas verdes y moradas, cebollas, pasta de tomate…), hamburguesa (torre por capas con fotos reales), perro caliente (pan, salchicha, toppings y salsas) y pollo a la brasa.
 - **Checkout** con datos de domicilio obligatorios y **seguimiento** del estado (recibido → preparando → en camino → entregado / cancelado). Los pedidos nunca se borran y se consultan con teléfono + código (`DEM-XXXX`).
 - **Panel admin** (`/admin`, clave inicial `1234`): pedidos, cambio de estado, cancelación con motivo, catálogo/precios/disponibilidad y resumen del día.
 - **PWA**: instalable, con caché offline del catálogo.

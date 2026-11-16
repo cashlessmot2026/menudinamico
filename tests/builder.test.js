@@ -11,7 +11,7 @@ test('seleccionInicial elige la primera opción disponible de cada paso único',
   const sel = seleccionInicial(builders.pizza)
   expect(sel.tamano).toEqual({ personal: 1 })
   expect(sel.masa).toEqual({ clasica: 1 })
-  expect(sel.salsa).toEqual({ 'pasta-tomate': 1 })
+  expect(sel.salsa).toBeUndefined() // la pizza ya no lleva salsa base
   expect(sel.quesos).toEqual({})
 })
 
@@ -32,14 +32,14 @@ test('toggleOpcion en paso único reemplaza la elección', () => {
   expect(sel.tamano).toEqual({ grande: 1 })
 })
 
-test('precioBuilder pizza: tamaño + masa + salsa + ingredientes x cantidad', () => {
+test('precioBuilder pizza: tamaño + masa + ingredientes x cantidad', () => {
   const b = builders.pizza
   let sel = toggleOpcion(b, seleccionInicial(b), 'tamano', 'grande')
   sel = toggleOpcion(b, sel, 'masa', 'gruesa')
   sel = toggleOpcion(b, sel, 'vegetales', 'rugula')
   sel = toggleOpcion(b, sel, 'carnes', 'pepperoni')
   sel = toggleOpcion(b, sel, 'carnes', 'pepperoni')
-  expect(precioBuilder(b, sel)).toBe(34000 + 3000 + 0 + 2500 + 2 * 4000)
+  expect(precioBuilder(b, sel)).toBe(34000 + 3000 + 2500 + 2 * 4000)
 })
 
 test('opción no disponible no se agrega ni se cobra', () => {
@@ -70,4 +70,10 @@ test('precios y disponibilidad de la BD (opciones) sobrescriben los locales', ()
   expect(rugula).toMatchObject({ precio: 9999, disponible: false })
   const integral = b.hamburguesa.pasos.find((p) => p.id === 'pan').opciones.find((o) => o.id === 'integral')
   expect(integral.precio).toBe(2222)
+})
+
+test('la pizza no ofrece salsa base: no hay paso "salsa" ni opciones de salsa', () => {
+  const pasos = builders.pizza.pasos.map((p) => p.id)
+  expect(pasos).not.toContain('salsa')
+  expect(pasos).toEqual(['tamano', 'masa', 'quesos', 'carnes', 'vegetales', 'extras'])
 })

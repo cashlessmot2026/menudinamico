@@ -7,7 +7,6 @@ import { cop } from '../src/lib/format.js'
 const catalogo = {
   tamanos: [{ id: 'grande', precio: 30000 }],
   masas: [{ id: 'gruesa', precio: 3000 }],
-  salsas: [{ id: 'pasta-tomate', precio: 0 }],
   ingredientes: [
     { id: 'rugula', precio: 2000, disponible: true },
     { id: 'burrata', precio: 6000, disponible: false }
@@ -33,9 +32,9 @@ test('generarCodigo produce DEM-XXXX válido', () => {
   expect(generarCodigo()).toMatch(/^DEM-[A-HJ-NP-Z2-9]{4}$/)
 })
 
-test('precioPizza suma base + masa + salsa + ingredientes disponibles', () => {
-  const cfg = { tamano: 'grande', masa: 'gruesa', salsa: 'pasta-tomate', ingredientes: ['rugula', 'burrata'] }
-  expect(precioPizza(cfg, catalogo)).toBe(30000 + 3000 + 0 + 2000)
+test('precioPizza suma base + masa + ingredientes disponibles', () => {
+  const cfg = { tamano: 'grande', masa: 'gruesa', ingredientes: ['rugula', 'burrata'] }
+  expect(precioPizza(cfg, catalogo)).toBe(30000 + 3000 + 2000)
 })
 
 test('totalCarrito suma precioUnit * cantidad y vacío es 0', () => {

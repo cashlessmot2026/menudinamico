@@ -17,6 +17,7 @@ En una base nueva `schema.sql` + `seed.sql` ya incluyen todo. Si la instalaste a
 
 1. `migracion-2026-11-fotos-hamburguesa.sql` (nombres nuevos, pan con sésamo y salsa rosada).
 2. `migracion-2026-11-perros-calientes.sql` (categoría y constructor de perros calientes, más ingredientes nuevos).
+3. `migracion-2026-11-sin-salsa-base.sql` (quita la salsa base de las pizzas; ejecútala **antes** de publicar la app que ya no la ofrece).
 
 ## Seguridad
 

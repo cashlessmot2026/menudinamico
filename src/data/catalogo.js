@@ -16,14 +16,6 @@ export const masas = [
   { id: 'rellena-queso', nombre: 'Rellena de queso', precio: 7000 }
 ]
 
-export const salsas = [
-  { id: 'pasta-tomate', nombre: 'Pasta de tomate', precio: 0 },
-  { id: 'pesto', nombre: 'Pesto de albahaca', precio: 2500 },
-  { id: 'bbq', nombre: 'BBQ ahumada', precio: 2000 },
-  { id: 'blanca', nombre: 'Salsa blanca (crema)', precio: 2000 },
-  { id: 'ajo-aceite', nombre: 'Ajo y aceite de oliva', precio: 1500 }
-]
-
 export const ingredientes = [
   ing('mozzarella', 'queso', 'Mozzarella', 3000),
   ing('parmesano', 'queso', 'Parmesano', 3500),
@@ -82,4 +74,4 @@ export const productos = [
   prod('asado-churrasco', 'asados', 'Churrasco', 'Corte de res 300 g con chimichurri.', 40000)
 ]
 
-export const catalogo = { productos, ingredientes, tamanos, masas, salsas }
+export const catalogo = { productos, ingredientes, tamanos, masas }

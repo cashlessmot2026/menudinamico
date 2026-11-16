@@ -1,4 +1,4 @@
-import { tamanos, masas, salsas, ingredientes } from '../data/catalogo.js'
+import { tamanos, masas, ingredientes } from '../data/catalogo.js'
 import { imagenDe } from '../data/imagenes.js'
 
 const EMOJI = {
@@ -118,7 +118,6 @@ export function buildersDesde(catalogo) {
     pasos: [
       { id: 'tamano', titulo: 'Tamaño', tipo: 'single', segmentado: true, opciones: (catalogo.tamanos || tamanos).map((t) => ({ ...t, disponible: t.disponible !== false, emoji: '📏' })) },
       { id: 'masa', titulo: 'Masa', tipo: 'single', opciones: (catalogo.masas || masas).map((m) => ({ ...m, disponible: m.disponible !== false, emoji: '🫓' })) },
-      { id: 'salsa', titulo: 'Salsa base', tipo: 'single', opciones: (catalogo.salsas || salsas).map((s) => ({ ...s, disponible: s.disponible !== false, emoji: '🍅' })) },
       { id: 'quesos', titulo: 'Quesos', tipo: 'multi', opciones: delCatalogo(ing, 'queso') },
       { id: 'carnes', titulo: 'Carnes', tipo: 'multi', opciones: delCatalogo(ing, 'carne') },
       { id: 'vegetales', titulo: 'Vegetales', tipo: 'multi', opciones: delCatalogo(ing, 'vegetal') },

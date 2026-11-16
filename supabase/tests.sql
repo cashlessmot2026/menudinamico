@@ -22,16 +22,15 @@ begin
   assert public.consultar_pedido('300-123-4567', lower(v_codigo)) is not null, 'FALLO: consulta con formato distinto';
   assert public.consultar_pedido('3009999999', v_codigo) is null, 'FALLO: teléfono ajeno no debe ver el pedido';
 
-  -- 3. pizza custom: Grande 34000 + masa gruesa 3000 + pasta de tomate 0 + rúgula 2500 + pepperoni x2 8000
+  -- 3. pizza custom (sin salsa base): Grande 34000 + masa gruesa 3000 + rúgula 2500 + pepperoni x2 8000
   r := public.crear_pedido(jsonb_build_object('cliente', cliente, 'items', jsonb_build_array(jsonb_build_object(
         'tipo','custom','constructor','pizza','cantidad',1,'selecciones', jsonb_build_array(
           jsonb_build_object('paso','tamano','id','grande','cantidad',1),
           jsonb_build_object('paso','masa','id','gruesa','cantidad',1),
-          jsonb_build_object('paso','salsa','id','pasta-tomate','cantidad',1),
           jsonb_build_object('paso','vegetales','id','rugula','cantidad',1),
           jsonb_build_object('paso','carnes','id','pepperoni','cantidad',2))))));
   select total into v_total from public.pedidos where codigo = r->>'codigo';
-  assert v_total = 34000 + 3000 + 0 + 2500 + 8000, 'FALLO: precio de pizza custom (obtuvo ' || v_total || ')';
+  assert v_total = 34000 + 3000 + 2500 + 8000, 'FALLO: precio de pizza custom (obtuvo ' || v_total || ')';
 
   -- 4. ítem no disponible se rechaza
   update public.opciones set disponible = false where constructor = 'pizza' and id = 'burrata';
@@ -40,7 +39,6 @@ begin
         'tipo','custom','constructor','pizza','cantidad',1,'selecciones', jsonb_build_array(
           jsonb_build_object('paso','tamano','id','grande','cantidad',1),
           jsonb_build_object('paso','masa','id','clasica','cantidad',1),
-          jsonb_build_object('paso','salsa','id','pasta-tomate','cantidad',1),
           jsonb_build_object('paso','quesos','id','burrata','cantidad',1))))));
     raise exception 'FALLO: debía rechazar opción no disponible';
   exception when others then

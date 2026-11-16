@@ -6,7 +6,7 @@ test('el catálogo incluye los ingredientes, masas y tamaños pedidos', () => {
   for (const id of ['rugula', 'lechuga', 'aceituna-verde', 'aceituna-morada', 'cebolla-morada', 'cebolla-blanca']) {
     expect(ids).toContain(id)
   }
-  expect(catalogo.salsas.map((s) => s.id)).toContain('pasta-tomate')
+  expect(catalogo.salsas).toBeUndefined() // la pizza ya no tiene salsa base
   expect(catalogo.masas).toHaveLength(6)
   expect(catalogo.tamanos).toHaveLength(4)
 })
